@@ -75,30 +75,23 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="jTabela">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="6" rowCount="6">
-                <Column editable="false" title="ID" type="java.lang.String"/>
-                <Column editable="false" title="Curso" type="java.lang.String"/>
-                <Column editable="false" title="CargaHoraria" type="java.lang.String"/>
-                <Column editable="false" title="Ativo" type="java.lang.Object"/>
-                <Column editable="false" title="Remover" type="java.lang.Object"/>
-                <Column editable="false" title="Editar" type="java.lang.Object"/>
-              </Table>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;        {null, null, null, null, null, null},&#xa;        {null, null, null, null, null, null},&#xa;        {null, null, null, null, null, null},&#xa;        {null, null, null, null, null, null},&#xa;        {null, null, null, null, null, null},&#xa;        {null, null, null, null, null, null},&#xa;        {null, null, null, null, null, null}&#xa;    },&#xa;    new String [] {&#xa;        &quot;Curso&quot;, &quot;C&#xf3;dCurso&quot;, &quot;Cargahor&#xe1;ria&quot;, &quot;Ativo&quot;, &quot;Remover&quot;, &quot;Editar&quot;&#xa;    }&#xa;) {&#xa;    Class[] types = new Class [] {&#xa;    String.class,   // Curso&#xa;    String.class,   // C&#xf3;digo&#xa;    Integer.class,  // Carga&#xa;    Boolean.class,  // Ativo&#xa;    ImageIcon.class, // Remover&#xa;    ImageIcon.class  // Editar&#xa;};&#xa;    boolean[] canEdit = new boolean [] {&#xa;        false, false, false, false, false, false&#xa;    };&#xa;&#xa;    public Class getColumnClass(int columnIndex) {&#xa;    return types[columnIndex];&#xa;}&#xa;&#xa;    public boolean isCellEditable(int rowIndex, int columnIndex) {&#xa;        return canEdit [columnIndex];&#xa;    }&#xa;}" type="code"/>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title value="ID"/>
-                  <Editor/>
-                  <Renderer/>
-                </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                   <Title value="Curso"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title value="CargaHoraria"/>
+                  <Title value="C&#xf3;dCurso"/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title value="Cargahor&#xe1;ria"/>
                   <Editor/>
                   <Renderer/>
                 </Column>
@@ -126,6 +119,9 @@
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTabelaMouseClicked"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -160,6 +156,9 @@
           <Image iconType="3" name="/images/search.png"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbPesquisarActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

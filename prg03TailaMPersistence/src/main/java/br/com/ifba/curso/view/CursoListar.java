@@ -8,6 +8,12 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import java.util.logging.Logger;
+import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.curso.dao.CursoDao;
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  *
  * @author Taila
@@ -15,47 +21,103 @@ import java.util.logging.Logger;
 public class CursoListar extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CursoListar.class.getName());
-
+    private java.util.List<Curso> listaCursos = new java.util.ArrayList<>();
+    
     /**
      * Creates new form CursoListar
      */
     public CursoListar() {
         initComponents();
-        // Defina a cor RGB da imagem: (R=30, G=63, B=95)
-        Color azulEscuroTeal = new Color(30, 63, 95); 
-        
-        // 1. Mudar a cor de fundo do JFrame (janela principal)
-        this.getContentPane().setBackground(azulEscuroTeal); 
-        
-        // 2. Mudar a cor de fundo do JScrollPane (a área em volta da tabela)
-        jScrollPane1.getViewport().setBackground(azulEscuroTeal);
-        
-        // 3. Opcional: Mudar a cor da própria Tabela (JTable)
-        jTabela.setBackground(azulEscuroTeal);
-        jTabela.setForeground(Color.WHITE); // O texto da tabela deve ser branco para contraste
-        jTabela.setGridColor(new Color(40, 80, 120)); // Sugestão: Linhas da grade ligeiramente mais claras
-        
-        carregarExemplosNaTabela();
+     
+    // Configura a cor de fundo da janela e da tabela
+    Color azulEscuroTeal = new Color(30, 63, 95); 
+    this.getContentPane().setBackground(azulEscuroTeal); 
+    jScrollPane1.getViewport().setBackground(azulEscuroTeal);
+    jTabela.setForeground(Color.BLACK);
+    jTabela.setGridColor(new Color(40, 80, 120));
+   
+     // Verifica se há cursos no banco; se não houver, adiciona exemplos
+    CursoDao dao = new CursoDao();
+    if (dao.findAll().isEmpty()) {
+        for (Curso c : gerarCursosExemplo()) {
+            dao.save(c);// Salva no banco
+        }
     }
 
+    carregarTabela(dao.findAll());
+
+    }
+
+    // Método para gerar cursos de exemplo caso o banco esteja vazio
     private void carregarExemplosNaTabela() {
+    List<Curso> exemplos = gerarCursosExemplo();
+    carregarTabela(exemplos);
+}
+
+    public List<Curso> gerarCursosExemplo() {
+    List<Curso> cursos = new ArrayList<>();
+
+    Curso c1 = new Curso();
+    c1.setNome("Informática Básica");
+    c1.setCodigoCurso("CUR001");
+    c1.setCargaHoraria(40);
+    c1.setAtivo(true);
+    cursos.add(c1);
+
+    Curso c2 = new Curso();
+    c2.setNome("Administração");
+    c2.setCodigoCurso("CUR002");
+    c2.setCargaHoraria(60);
+    c2.setAtivo(true);
+    cursos.add(c2);
+
+    Curso c3 = new Curso();
+    c3.setNome("Enfermagem");
+    c3.setCodigoCurso("CUR003");
+    c3.setCargaHoraria(80);
+    c3.setAtivo(true);
+    cursos.add(c3);
+
+    Curso c4 = new Curso();
+    c4.setNome("Programação Java");
+    c4.setCodigoCurso("CUR004");
+    c4.setCargaHoraria(100);
+    c4.setAtivo(true);
+    cursos.add(c4);
+
+    Curso c5 = new Curso();
+    c5.setNome("Manutenção de Computadores");
+    c5.setCodigoCurso("CUR005");
+    c5.setCargaHoraria(50);
+    c5.setAtivo(true);
+    cursos.add(c5);
+
+    return cursos;
+}
+
+
+
+    private void carregarTabela(java.util.List<Curso> cursos) {
+     
+    ImageIcon iconTrash = new ImageIcon(getClass().getResource("/images/trash.png"));
+    ImageIcon iconEdit = new ImageIcon(getClass().getResource("/images/edit.png"));
 
     DefaultTableModel model = (DefaultTableModel) jTabela.getModel();
-    model.setRowCount(0); // limpa a tabela
+    model.setRowCount(0);// Limpa a tabela
 
-    // Exemplos prontos
-    Object[][] dados = {
-        {1L, "Administração", "40h", true,  "Remover", "Editar"},
-        {2L, "Informática", "60h", true,  "Remover", "Editar"},
-        {3L, "Enfermagem", "50h", false, "Remover", "Editar"},
-        {4L, "Logística", "30h", true,  "Remover", "Editar"},
-        {5L, "Marketing", "80h", true,  "Remover", "Editar"}
-    };
-
-    for (Object[] linha : dados) {
-        model.addRow(linha);
+    // Adiciona cada curso como uma linha da tabela
+    for (Curso c : cursos) {
+        model.addRow(new Object[]{
+            c.getNome(),
+            c.getCodigoCurso(),
+            c.getCargaHoraria(),
+            c.isAtivo(),
+            iconTrash,
+            iconEdit
+        });
     }
 }
+    
 
     
     /**
@@ -82,21 +144,27 @@ public class CursoListar extends javax.swing.JFrame {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Curso", "CargaHoraria", "Ativo", "Remover", "Editar"
+                "Curso", "CódCurso", "Cargahorária", "Ativo", "Remover", "Editar"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                String.class,   // Curso
+                String.class,   // Código
+                Integer.class,  // Carga
+                Boolean.class,  // Ativo
+                ImageIcon.class, // Remover
+                ImageIcon.class  // Editar
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -110,9 +178,9 @@ public class CursoListar extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTabela);
         if (jTabela.getColumnModel().getColumnCount() > 0) {
-            jTabela.getColumnModel().getColumn(0).setHeaderValue("ID");
-            jTabela.getColumnModel().getColumn(1).setHeaderValue("Curso");
-            jTabela.getColumnModel().getColumn(2).setHeaderValue("CargaHoraria");
+            jTabela.getColumnModel().getColumn(0).setHeaderValue("Curso");
+            jTabela.getColumnModel().getColumn(1).setHeaderValue("CódCurso");
+            jTabela.getColumnModel().getColumn(2).setHeaderValue("Cargahorária");
             jTabela.getColumnModel().getColumn(3).setHeaderValue("Ativo");
             jTabela.getColumnModel().getColumn(4).setHeaderValue("Remover");
             jTabela.getColumnModel().getColumn(5).setHeaderValue("Editar");
@@ -140,6 +208,11 @@ public class CursoListar extends javax.swing.JFrame {
         });
 
         jbPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search.png"))); // NOI18N
+        jbPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbPesquisarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -180,20 +253,83 @@ public class CursoListar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisarActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtPesquisarActionPerformed
 
     private void jTabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabelaMouseClicked
-        // TODO add your handling code here:
+      // Evento de clique na tabela para remover ou editar cursos                               
+    int linha = jTabela.getSelectedRow();
+    int coluna = jTabela.getSelectedColumn();
+    
+    if (linha < 0) return;
+    
+    String nomeCurso = jTabela.getValueAt(linha, 0).toString();
+    CursoDao dao = new CursoDao();
+     List<Curso> cursosEncontrados = dao.findByNome(nomeCurso);
+
+    if (cursosEncontrados.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Nenhum curso encontrado com o nome: " + nomeCurso);
+        return;
+    }
+    
+    Curso cursoSelecionado = cursosEncontrados.get(0);
+    
+    if (coluna == 4) { // coluna "Remover"
+        int resposta = JOptionPane.showConfirmDialog(
+            this,
+            "Deseja remover o curso?",
+            "Confirmação",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (resposta == JOptionPane.YES_OPTION) {
+            dao.delete(cursoSelecionado);
+            JOptionPane.showMessageDialog(this, "Curso removido com sucesso!");
+            carregarTabela(dao.findAll());// Atualiza tabela
+
+        }
+    }
+    
+    /*if (coluna == 5) { // coluna "Editar"
+        CursoEditar tela = new CursoEditar(cursoSelecionado);
+        tela.setVisible(true);
+        this.dispose();// Fecha tela atual
+    }*/
+
     }//GEN-LAST:event_jTabelaMouseClicked
 
     private void jbCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCadastrarActionPerformed
-        // TODO add your handling code here:
+       /* CursoCadastrar tela = new CursoCadastrar();
+        tela.setVisible(true);
+        this.dispose();*/
     }//GEN-LAST:event_jbCadastrarActionPerformed
 
     private void txtPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPesquisarMouseClicked
-        // TODO add your handling code here:
+        txtPesquisar.setText("");
+        carregarTabela(new CursoDao().findAll());
     }//GEN-LAST:event_txtPesquisarMouseClicked
+
+    private void jbPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbPesquisarActionPerformed
+        try {
+        String texto = txtPesquisar.getText();
+        CursoDao dao = new CursoDao();
+        List<Curso> resultado;
+
+        if (texto == null || texto.trim().isEmpty() || texto.equals("Pesquisar...")) {
+            resultado = dao.findAll();// Lista todos se pesquisa vazia
+        } else {
+            resultado = dao.findByNome(texto);// Pesquisa por nome
+        }
+    
+        carregarTabela(resultado);// Atualiza tabela
+
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao pesquisar: " + e.getMessage());
+        logger.severe("Erro no botão pesquisar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_jbPesquisarActionPerformed
 
     /**
      * @param args the command line arguments
