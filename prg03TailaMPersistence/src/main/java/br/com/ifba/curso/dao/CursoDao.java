@@ -11,21 +11,27 @@ import java.util.List;
 
 public class CursoDao extends GenericDao<Curso> implements CursoIDao {
 
-     // Construtor da classe DAO, chama o construtor da classe genérica
+    // Construtor chama o construtor da classe pai (GenericDao)
     public CursoDao() {
-        super();
+        super(); // Apenas inicializa o comportamento da classe genérica
     }
 
-    // Método que retorna uma lista de cursos cujo nome contém a string informada
+    // Método que busca cursos no banco de dados pelo nome
     @Override
     public List<Curso> findByNome(String nome) {
-    TypedQuery<Curso> query = entityManager.createQuery(
-        "SELECT c FROM Curso c WHERE LOWER(c.nome) LIKE LOWER(:nome)",// Consulta JPQL
-        Curso.class
-    );
-    query.setParameter("nome", "%" + nome + "%");// Adiciona curingas para LIKE
-    return query.getResultList(); // Retorna lista de resultados
-}
+
+        // Cria uma consulta JPQL que procura cursos pelo nome
+        TypedQuery<Curso> query = entityManager.createQuery(
+            "SELECT c FROM Curso c WHERE LOWER(c.nome) LIKE LOWER(:nome)", // Consulta JPQL
+            Curso.class // Tipo de resultado esperado
+        );
+
+        // Define o parâmetro :nome, adicionando % antes e depois para o LIKE
+        query.setParameter("nome", "%" + nome + "%");
+
+        // Executa a consulta e retorna a lista de cursos encontrados
+        return query.getResultList();
+    }
 
 
   

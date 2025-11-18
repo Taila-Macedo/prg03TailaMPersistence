@@ -18,53 +18,51 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class GenericDao <Entity extends PersistenceEntity> implements GenericIDao<Entity> {
 
-    protected static EntityManager entityManager;
+     protected static EntityManager entityManager;
 
     static {
-        // Inicialização do EntityManagerFactory (lendo o persistence.xml)
+        // Cria o EntityManagerFactory lendo o arquivo persistence.xml
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("gerenciamento_curso");
-        entityManager = factory.createEntityManager();
+
+         entityManager = factory.createEntityManager();
     }
 
-    // Método que obtém a classe real da entidade (ex: Curso, Turma...)
+    // Descobre o tipo da entidade (por exemplo: Curso, Aluno, etc.)
     protected Class<?> getTypeClass() {
         return (Class<?>) ((ParameterizedType) getClass()
-                .getGenericSuperclass())
-                .getActualTypeArguments()[0];
+                .getGenericSuperclass()) // Pega a superclasse (GenericDao<Algo>)
+                .getActualTypeArguments()[0]; // Retorna o tipo dentro dos <>
     }
 
     public Entity save(Entity entity) {
-        // Método para salvar uma nova entidade no banco de dados
-        entityManager.getTransaction().begin();
-        entityManager.persist(entity);
-        entityManager.getTransaction().commit();
-        return entity;
+        entityManager.getTransaction().begin(); // Inicia uma transação
+        entityManager.persist(entity); // Salva o objeto no banco
+        entityManager.getTransaction().commit(); // Confirma a operação
+        return entity; // Retorna o objeto salvo
     }
 
-    // Método para atualizar uma entidade existente no banco de dados
+    // Método para atualizar uma entidade existente
     public Entity update(Entity entity) {
-        entityManager.getTransaction().begin();
-        entity = entityManager.merge(entity);
-        entityManager.getTransaction().commit();
-        return entity;
+        entityManager.getTransaction().begin(); // Inicia a transação
+        entity = entityManager.merge(entity); // Atualiza o objeto no banco
+        entityManager.getTransaction().commit(); // Confirma
+        return entity; // Retorna o objeto atualizado
     }
 
     public void delete(Entity entity) {
-        // Busca pelo ID antes de remover
-        entity = findById(entity.getId());
-        entityManager.getTransaction().begin();
-        entityManager.remove(entity);
-        entityManager.getTransaction().commit();
+        entity = findById(entity.getId()); // Busca a entidade pelo ID
+        entityManager.getTransaction().begin(); // Inicia transação
+        entityManager.remove(entity); // Remove o registro do banco
+        entityManager.getTransaction().commit(); // Confirma exclusão
     }
 
     public Entity findById(Long id) {
-        return (Entity) entityManager.find(getTypeClass(), id);
+        return (Entity) entityManager.find(getTypeClass(), id); // Retorna o objeto encontrado
     }
 
-    // Método para buscar todas as entidades do tipo Entity no banco
     public List<Entity> findAll() {
         return entityManager
-                .createQuery("from " + getTypeClass().getName())
-                .getResultList();
+                .createQuery("from " + getTypeClass().getName()) // Cria a consulta JPQL
+                .getResultList(); // Executa e retorna todos os registros
     }
 }

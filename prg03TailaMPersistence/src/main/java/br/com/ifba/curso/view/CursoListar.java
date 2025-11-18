@@ -291,18 +291,18 @@ public class CursoListar extends javax.swing.JFrame {
         }
     }
     
-    /*if (coluna == 5) { // coluna "Editar"
-        CursoEditar tela = new CursoEditar(cursoSelecionado);
-        tela.setVisible(true);
-        this.dispose();// Fecha tela atual
-    }*/
+        if (coluna == 5) {
+            CursoEditar tela = new CursoEditar(cursoSelecionado);
+            tela.setVisible(true);
+            this.dispose();
+    }
 
     }//GEN-LAST:event_jTabelaMouseClicked
 
     private void jbCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCadastrarActionPerformed
-       /* CursoCadastrar tela = new CursoCadastrar();
+        CursoSave tela = new CursoSave();
         tela.setVisible(true);
-        this.dispose();*/
+        this.dispose();
     }//GEN-LAST:event_jbCadastrarActionPerformed
 
     private void txtPesquisarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPesquisarMouseClicked
